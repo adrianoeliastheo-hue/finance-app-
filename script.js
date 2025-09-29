@@ -152,3 +152,16 @@ simulateBtn.addEventListener("click", () => {
   resultsSection.classList.remove("hidden");
   desenharGrafico(saldos);
 });
+function mostrarInputPeriodo() {
+  const select = document.getElementById('periodo');
+  const input = document.getElementById('quantidade-periodo');
+
+  if (select.value === 'anos' || select.value === 'meses') {
+    input.style.display = 'inline-block';
+    input.value = ''; // limpa input ao mudar seleção
+    input.focus();
+  } else {
+    input.style.display = 'none';
+    input.value = '';
+  }
+}

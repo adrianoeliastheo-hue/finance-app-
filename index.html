@@ -71,4 +71,20 @@
   <script src="script.js"></script>
 </body>
 </html>
+<div class="periodo-container">
+  <label for="periodo">Período:</label>
+  <select id="periodo" onchange="mostrarInputPeriodo()">
+    <option value="">Selecione</option>
+    <option value="anos">Anos</option>
+    <option value="meses">Meses</option>
+  </select>
+
+  <input
+    type="number"
+    id="quantidade-periodo"
+    placeholder="Quantos?"
+    min="1"
+    style="display:none;"
+  />
+</div>
 
