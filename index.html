@@ -19,18 +19,15 @@
       <input type="number" id="amount" min="0" step="0.01" placeholder="Ex: 500" />
 
       <label for="period">Período:</label>
-      <div class="periodo-container">
-        <select id="period" onchange="mostrarInputPeriodo()">
-          <option value="meses">Meses</option>
-          <option value="anos">Anos</option>
-        </select>
-        <input
-          type="number"
-          id="quantidade-periodo"
-          placeholder="Quantos?"
-          min="1"
-          style="display:none;"
-        />
+      <select id="period" onchange="mostrarCampoPeriodo()">
+        <option value="">Selecione</option>
+        <option value="meses">Meses</option>
+        <option value="anos">Anos</option>
+      </select>
+
+      <div id="campo-quantidade" style="display: none; margin-top: 10px;">
+        <label for="quantidade">Quantos?</label>
+        <input type="number" id="quantidade" min="1" placeholder="Ex: 12" />
       </div>
 
       <label>Tipo de aplicação:</label>

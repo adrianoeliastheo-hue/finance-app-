@@ -1,24 +1,25 @@
+// Dados dos investimentos com nomes mais simples e taxas anuais médias
 const investmentOptions = {
   conservador: [
-    { name: "Tesouro Selic", rate: 0.07 },
-    { name: "CDB", rate: 0.065 },
-    { name: "Poupança", rate: 0.04 },
+    { name: "Tesouro Direto (rende com segurança)", rate: 0.07 },
+    { name: "Banco CDB (rende mais que a poupança)", rate: 0.065 },
+    { name: "Poupança (baixo rendimento, mas segura)", rate: 0.04 },
   ],
   equilibrado: [
-    { name: "Fundos Multimercado", rate: 0.10 },
-    { name: "LCI/LCA", rate: 0.09 },
-    { name: "Debêntures", rate: 0.11 },
+    { name: "Fundos Diversificados", rate: 0.10 },
+    { name: "Letra de Crédito (livre de imposto)", rate: 0.09 },
+    { name: "Títulos de Empresas (rentáveis, com risco)", rate: 0.11 },
   ],
   arrojado: [
-    { name: "Ações", rate: 0.15 },
-    { name: "Fundos Imobiliários", rate: 0.13 },
-    { name: "Criptomoedas", rate: 0.25 },
+    { name: "Ações (varia muito, mas pode render mais)", rate: 0.15 },
+    { name: "Fundos de Imóveis (aluguel e valorização)", rate: 0.13 },
+    { name: "Cripto (alta volatilidade e risco)", rate: 0.25 },
   ],
 };
 
 const amountInput = document.getElementById("amount");
 const periodSelect = document.getElementById("period");
-const quantityInput = document.getElementById("quantidade-periodo");
+const quantidadeInput = document.getElementById("quantidade");
 const typeButtons = document.querySelectorAll(".type-btn");
 const subtypesContainer = document.getElementById("subtypes-container");
 const subtypeSelect = document.getElementById("subtype-select");
@@ -30,6 +31,7 @@ const chartCanvas = document.getElementById("chart");
 let selectedType = null;
 let chartInstance = null;
 
+// Ativar botão de tipo e mostrar subtipos
 function selectType(type) {
   selectedType = type;
   typeButtons.forEach((btn) => {
@@ -48,6 +50,7 @@ function selectType(type) {
   subtypesContainer.classList.remove("hidden");
 }
 
+// Calcular saldo com juros compostos mensais
 function calcularAcumulado(mensalidade, meses, taxaAnual) {
   const taxaMensal = Math.pow(1 + taxaAnual, 1 / 12) - 1;
   let saldo = 0;
@@ -59,6 +62,7 @@ function calcularAcumulado(mensalidade, meses, taxaAnual) {
   return saldoMensal;
 }
 
+// Mostrar gráfico com Chart.js
 function desenharGrafico(saldos) {
   if (chartInstance) {
     chartInstance.destroy();
@@ -98,14 +102,28 @@ function desenharGrafico(saldos) {
   });
 }
 
+// Mostrar input "quantos?" conforme escolha
+function mostrarCampoPeriodo() {
+  const select = document.getElementById("period");
+  const campo = document.getElementById("campo-quantidade");
+
+  if (select.value === "anos" || select.value === "meses") {
+    campo.style.display = "block";
+  } else {
+    campo.style.display = "none";
+  }
+}
+
+// Evento de clique nos botões de tipo
 typeButtons.forEach((btn) => {
   btn.addEventListener("click", () => selectType(btn.dataset.type));
 });
 
+// Clique em "Simular"
 simulateBtn.addEventListener("click", () => {
   const mensalidade = parseFloat(amountInput.value);
   const periodo = periodSelect.value;
-  const quantidade = parseInt(quantityInput.value);
+  const quantidade = parseInt(quantidadeInput.value);
   const tipo = selectedType;
   const subtipoIndex = subtypeSelect.value;
 
@@ -114,19 +132,20 @@ simulateBtn.addEventListener("click", () => {
     amountInput.focus();
     return;
   }
-
-  if (!quantidade || quantidade <= 0 || isNaN(quantidade)) {
-    alert("Por favor, informe uma quantidade válida de meses ou anos.");
-    quantityInput.focus();
-    return;
-  }
-
   if (!tipo) {
     alert("Por favor, selecione um tipo de aplicação.");
     return;
   }
+  if (isNaN(quantidade) || quantidade <= 0) {
+    alert("Por favor, insira a quantidade de tempo válida.");
+    return;
+  }
 
-  const meses = periodo === "anos" ? quantidade * 12 : quantidade;
+  let meses = quantidade;
+  if (periodo === "anos") {
+    meses = quantidade * 12;
+  }
+
   const investimento = investmentOptions[tipo][subtipoIndex];
   const saldos = calcularAcumulado(mensalidade, meses, investimento.rate);
 
@@ -136,10 +155,3 @@ simulateBtn.addEventListener("click", () => {
   resultsSection.classList.remove("hidden");
   desenharGrafico(saldos);
 });
-
-function mostrarInputPeriodo() {
-  const input = document.getElementById("quantidade-periodo");
-  input.style.display = "inline-block";
-  input.value = "";
-  input.focus();
-}
