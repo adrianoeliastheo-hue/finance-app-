@@ -1,4 +1,3 @@
-// Dados dos investimentos com subtipos e taxas anuais médias (%)
 const investmentOptions = {
   conservador: [
     { name: "Tesouro Selic", rate: 0.07 },
@@ -19,7 +18,7 @@ const investmentOptions = {
 
 const amountInput = document.getElementById("amount");
 const periodSelect = document.getElementById("period");
-const quantidadePeriodoInput = document.getElementById("quantidade-periodo");
+const quantityInput = document.getElementById("quantidade-periodo");
 const typeButtons = document.querySelectorAll(".type-btn");
 const subtypesContainer = document.getElementById("subtypes-container");
 const subtypeSelect = document.getElementById("subtype-select");
@@ -31,14 +30,12 @@ const chartCanvas = document.getElementById("chart");
 let selectedType = null;
 let chartInstance = null;
 
-// Função para ativar botão selecionado e mostrar subtipos
 function selectType(type) {
   selectedType = type;
   typeButtons.forEach((btn) => {
     btn.classList.toggle("active", btn.dataset.type === type);
   });
 
-  // Atualiza opções dos subtipos
   const options = investmentOptions[type];
   subtypeSelect.innerHTML = "";
   options.forEach((opt, i) => {
@@ -51,7 +48,6 @@ function selectType(type) {
   subtypesContainer.classList.remove("hidden");
 }
 
-// Função para calcular o valor acumulado com juros compostos mensais
 function calcularAcumulado(mensalidade, meses, taxaAnual) {
   const taxaMensal = Math.pow(1 + taxaAnual, 1 / 12) - 1;
   let saldo = 0;
@@ -63,7 +59,6 @@ function calcularAcumulado(mensalidade, meses, taxaAnual) {
   return saldoMensal;
 }
 
-// Função para desenhar o gráfico usando Chart.js
 function desenharGrafico(saldos) {
   if (chartInstance) {
     chartInstance.destroy();
@@ -103,16 +98,14 @@ function desenharGrafico(saldos) {
   });
 }
 
-// Evento para seleção do tipo de investimento
 typeButtons.forEach((btn) => {
   btn.addEventListener("click", () => selectType(btn.dataset.type));
 });
 
-// Evento do botão Simular
 simulateBtn.addEventListener("click", () => {
   const mensalidade = parseFloat(amountInput.value);
-  const periodoTipo = periodSelect.value;
-  const quantidadePeriodo = parseInt(quantidadePeriodoInput.value);
+  const periodo = periodSelect.value;
+  const quantidade = parseInt(quantityInput.value);
   const tipo = selectedType;
   const subtipoIndex = subtypeSelect.value;
 
@@ -121,36 +114,32 @@ simulateBtn.addEventListener("click", () => {
     amountInput.focus();
     return;
   }
+
+  if (!quantidade || quantidade <= 0 || isNaN(quantidade)) {
+    alert("Por favor, informe uma quantidade válida de meses ou anos.");
+    quantityInput.focus();
+    return;
+  }
+
   if (!tipo) {
     alert("Por favor, selecione um tipo de aplicação.");
     return;
   }
-  if (!quantidadePeriodo || quantidadePeriodo <= 0) {
-    alert("Por favor, insira um período válido.");
-    quantidadePeriodoInput.focus();
-    return;
-  }
 
-  // Converte período para meses
-  let meses = 0;
-  if (periodoTipo === "anos") {
-    meses = quantidadePeriodo * 12;
-  } else if (periodoTipo === "meses") {
-    meses = quantidadePeriodo;
-  } else {
-    alert("Por favor, selecione o período corretamente.");
-    return;
-  }
-
+  const meses = periodo === "anos" ? quantidade * 12 : quantidade;
   const investimento = investmentOptions[tipo][subtipoIndex];
   const saldos = calcularAcumulado(mensalidade, meses, investimento.rate);
 
-  // Mostrar resumo
   const saldoFinal = saldos[saldos.length - 1];
   summary.textContent = `Investindo R$ ${mensalidade.toFixed(2)} por mês, durante ${meses} meses, no investimento "${investimento.name}", com uma taxa anual média de ${(investimento.rate * 100).toFixed(2)}%, você terá aproximadamente R$ ${saldoFinal.toFixed(2)} no final do período.`;
 
-  // Mostrar seção de resultados e desenhar gráfico
   resultsSection.classList.remove("hidden");
   desenharGrafico(saldos);
+});
+
+function mostrarInputPeriodo() {
+  const input = document.getElementById("quantidade-periodo");
+  input.style.display = "inline-block";
+  input.value = "";
+  input.focus();
 }
-);
