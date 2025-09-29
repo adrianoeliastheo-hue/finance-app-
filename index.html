@@ -20,7 +20,8 @@
 
       <label for="period">Período:</label>
       <div class="periodo-container">
-        <select id="period">
+        <select id="period" onchange="mostrarInputPeriodo()">
+          <option value="">Selecione</option>
           <option value="meses">Meses</option>
           <option value="anos">Anos</option>
         </select>
@@ -29,6 +30,7 @@
           id="quantidade-periodo"
           placeholder="Quantos?"
           min="1"
+          style="display:none;"
         />
       </div>
 
@@ -79,5 +81,6 @@
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
