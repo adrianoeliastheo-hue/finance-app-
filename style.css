@@ -173,6 +173,7 @@ footer {
     width: 100%;
   }
 }
+
 .periodo-container {
   display: flex;
   align-items: center;
@@ -183,3 +184,4 @@ footer {
   width: 80px;
   padding: 5px;
 }
+

@@ -19,6 +19,7 @@ const investmentOptions = {
 
 const amountInput = document.getElementById("amount");
 const periodSelect = document.getElementById("period");
+const quantidadePeriodoInput = document.getElementById("quantidade-periodo");
 const typeButtons = document.querySelectorAll(".type-btn");
 const subtypesContainer = document.getElementById("subtypes-container");
 const subtypeSelect = document.getElementById("subtype-select");
@@ -110,7 +111,8 @@ typeButtons.forEach((btn) => {
 // Evento do botão Simular
 simulateBtn.addEventListener("click", () => {
   const mensalidade = parseFloat(amountInput.value);
-  const periodo = periodSelect.value;
+  const periodoTipo = periodSelect.value;
+  const quantidadePeriodo = parseInt(quantidadePeriodoInput.value);
   const tipo = selectedType;
   const subtipoIndex = subtypeSelect.value;
 
@@ -123,22 +125,21 @@ simulateBtn.addEventListener("click", () => {
     alert("Por favor, selecione um tipo de aplicação.");
     return;
   }
+  if (!quantidadePeriodo || quantidadePeriodo <= 0) {
+    alert("Por favor, insira um período válido.");
+    quantidadePeriodoInput.focus();
+    return;
+  }
 
   // Converte período para meses
   let meses = 0;
-  if (periodo === "anos") {
-    meses = parseInt(prompt("Digite a quantidade de anos:"));
-    if (isNaN(meses) || meses <= 0) {
-      alert("Por favor, insira um número válido de anos.");
-      return;
-    }
-    meses *= 12;
+  if (periodoTipo === "anos") {
+    meses = quantidadePeriodo * 12;
+  } else if (periodoTipo === "meses") {
+    meses = quantidadePeriodo;
   } else {
-    meses = parseInt(prompt("Digite a quantidade de meses:"));
-    if (isNaN(meses) || meses <= 0) {
-      alert("Por favor, insira um número válido de meses.");
-      return;
-    }
+    alert("Por favor, selecione o período corretamente.");
+    return;
   }
 
   const investimento = investmentOptions[tipo][subtipoIndex];
@@ -151,17 +152,5 @@ simulateBtn.addEventListener("click", () => {
   // Mostrar seção de resultados e desenhar gráfico
   resultsSection.classList.remove("hidden");
   desenharGrafico(saldos);
-});
-function mostrarInputPeriodo() {
-  const select = document.getElementById('periodo');
-  const input = document.getElementById('quantidade-periodo');
-
-  if (select.value === 'anos' || select.value === 'meses') {
-    input.style.display = 'inline-block';
-    input.value = ''; // limpa input ao mudar seleção
-    input.focus();
-  } else {
-    input.style.display = 'none';
-    input.value = '';
-  }
 }
+);

@@ -19,10 +19,18 @@
       <input type="number" id="amount" min="0" step="0.01" placeholder="Ex: 500" />
 
       <label for="period">Período:</label>
-      <select id="period">
-        <option value="meses">Meses</option>
-        <option value="anos">Anos</option>
-      </select>
+      <div class="periodo-container">
+        <select id="period">
+          <option value="meses">Meses</option>
+          <option value="anos">Anos</option>
+        </select>
+        <input
+          type="number"
+          id="quantidade-periodo"
+          placeholder="Quantos?"
+          min="1"
+        />
+      </div>
 
       <label>Tipo de aplicação:</label>
       <div class="investment-types">
@@ -71,20 +79,5 @@
   <script src="script.js"></script>
 </body>
 </html>
-<div class="periodo-container">
-  <label for="periodo">Período:</label>
-  <select id="periodo" onchange="mostrarInputPeriodo()">
-    <option value="">Selecione</option>
-    <option value="anos">Anos</option>
-    <option value="meses">Meses</option>
-  </select>
 
-  <input
-    type="number"
-    id="quantidade-periodo"
-    placeholder="Quantos?"
-    min="1"
-    style="display:none;"
-  />
-</div>
 
